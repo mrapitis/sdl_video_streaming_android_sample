@@ -121,12 +121,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
+import static com.smartdevicelink.transport.MultiplexTransportConfig.FLAG_MULTI_SECURITY_MED;
+import static com.smartdevicelink.transport.MultiplexTransportConfig.FLAG_MULTI_SECURITY_OFF;
+
 public class SdlService extends Service implements IProxyListenerALM{
 
     private static final String TAG 					= "SDL Service";
 
-    private static final String APP_NAME 				= "Antelope";
-    private static final String APP_ID 					= "2160742002";
+    private static final String APP_NAME 				= "SDLStreaming";
+    private static final String APP_ID 					= "2160742003";
 
     private static final String ICON_FILENAME 			= "ic_sdl.png";
     private static final boolean WRITING_TO_FILE_MODE      = false;
@@ -199,7 +202,7 @@ public class SdlService extends Service implements IProxyListenerALM{
                     cachedIntent = intent;
                 }else{
                     //If we don't want anything but USB then would just do a return here and bail
-                    MultiplexTransportConfig config  = new MultiplexTransportConfig(getBaseContext(), APP_ID);
+                    MultiplexTransportConfig config  = new MultiplexTransportConfig(getBaseContext(), APP_ID,FLAG_MULTI_SECURITY_OFF);
                     config.setRequiresHighBandwidth(true);
                     transport = config;
                     //transport = new TCPTransportConfig(12345,"192.168.1.213",true);
@@ -212,6 +215,7 @@ public class SdlService extends Service implements IProxyListenerALM{
                 SdlProxyBuilder.Builder builder = new SdlProxyBuilder.Builder(this, APP_ID, APP_NAME, false,  this);
                 builder.setTransportType(transport);
                 builder.setVrAppHMITypes(appType);
+                SdlProxyALM.enableDebugTool();
 
                 //If using security, set the library here
                 //securityLibraries.add();    //Add security library here
@@ -260,7 +264,14 @@ public class SdlService extends Service implements IProxyListenerALM{
                     return true;
                 }
             });
-            videoView.setVideoURI(Uri.parse(LOCAL_VIDEO_URI));
+
+
+            //Uri uri = Uri.parse("http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_stereo_abl.mp4");
+           // videoView.setVideoURI(Uri.parse(LOCAL_VIDEO_URI));
+            //videoView.setVideoPath("http://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4");
+           // videoView.setVideoPath("https://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_30mb.mp4");
+            videoView.setVideoPath("https://www.sample-videos.com/video/mp4/720/big_buck_bunny_720p_5mb.mp4");
+
             videoView.start();
 
 
